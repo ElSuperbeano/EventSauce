@@ -6,7 +6,7 @@ namespace EventSauce\EventSourcing\Integration\Upcasting;
 
 use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
 use EventSauce\EventSourcing\Upcasting\DelegatableUpcaster;
-use Generator;
+
 
 class UpcasterStub implements DelegatableUpcaster
 {
@@ -17,12 +17,12 @@ class UpcasterStub implements DelegatableUpcaster
         return $this->type() === $type && $version < 1;
     }
 
-    public function upcast(array $payload): Generator
+    public function upcast(array $payload): array
     {
         $payload['payload']['property'] = 'upcasted';
         $payload['headers']['version'] = 1;
 
-        yield $payload;
+        return $payload;
     }
 
     public function type(): string

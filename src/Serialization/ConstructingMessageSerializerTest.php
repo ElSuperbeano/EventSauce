@@ -11,7 +11,7 @@ use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Time\TestClock;
 use EventSauce\EventSourcing\UuidAggregateRootId;
 use PHPUnit\Framework\TestCase;
-use function iterator_to_array;
+
 
 class ConstructingMessageSerializerTest extends TestCase
 {
@@ -32,7 +32,7 @@ class ConstructingMessageSerializerTest extends TestCase
         ]);
         $serializer = new ConstructingMessageSerializer();
         $serialized = $serializer->serializeMessage($message);
-        $deserializedMessage = iterator_to_array($serializer->unserializePayload($serialized))[0];
+        $deserializedMessage = $serializer->unserializePayload($serialized);
         $messageWithConstructedAggregateRootId = $message->withHeader(Header::AGGREGATE_ROOT_ID, $aggregateRootId);
         $this->assertEquals($messageWithConstructedAggregateRootId, $deserializedMessage);
     }

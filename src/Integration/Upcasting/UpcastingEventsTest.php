@@ -13,7 +13,6 @@ use EventSauce\EventSourcing\Serialization\UpcastingMessageSerializer;
 use EventSauce\EventSourcing\Time\TestClock;
 use EventSauce\EventSourcing\Upcasting\DelegatingUpcaster;
 use PHPUnit\Framework\TestCase;
-use function iterator_to_array;
 
 class UpcastingEventsTest extends TestCase
 {
@@ -37,7 +36,7 @@ class UpcastingEventsTest extends TestCase
         $upcaster = new DelegatingUpcaster(new UpcasterStub());
         $serializer = new UpcastingMessageSerializer(new ConstructingMessageSerializer(), $upcaster);
 
-        $message = iterator_to_array($serializer->unserializePayload($payload))[0];
+        $message = $serializer->unserializePayload($payload);
         $expected = $defaultDecorator->decorate(new Message(new UpcastedEventStub('upcasted')))->withHeader('version', 1);
 
         $this->assertEquals($expected, $message);
@@ -63,7 +62,7 @@ class UpcastingEventsTest extends TestCase
         $upcaster = new DelegatingUpcaster();
         $serializer = new UpcastingMessageSerializer(new ConstructingMessageSerializer(), $upcaster);
 
-        $message = iterator_to_array($serializer->unserializePayload($payload))[0];
+        $message = $serializer->unserializePayload($payload);
         $expected = $defaultDecorator->decorate(new Message(new UpcastedEventStub('undefined')));
 
         $this->assertEquals($expected, $message);

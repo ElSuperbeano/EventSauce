@@ -34,15 +34,12 @@ final class DelegatingUpcaster implements Upcaster
         return null;
     }
 
-    public function upcast(array $message): Generator
+    public function upcast(array $message): array
     {
         if ($upcaster = $this->upcaster($message)) {
-            foreach ($upcaster->upcast($message) as $upcasted) {
-                yield from $this->upcast($upcasted);
-            }
-        } else {
-            yield $message;
+            $message = $upcaster->upcast($message);
         }
+        return $message;
     }
 
     public function canUpcast(string $type, array $message): bool

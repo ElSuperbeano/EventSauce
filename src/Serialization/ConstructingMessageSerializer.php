@@ -9,7 +9,6 @@ use EventSauce\EventSourcing\ClassNameInflector;
 use EventSauce\EventSourcing\DotSeparatedSnakeCaseInflector;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
-use Generator;
 
 final class ConstructingMessageSerializer implements MessageSerializer
 {
@@ -49,7 +48,7 @@ final class ConstructingMessageSerializer implements MessageSerializer
         ];
     }
 
-    public function unserializePayload(array $payload): Generator
+    public function unserializePayload(array $payload): Message
     {
         if (isset($payload['headers'][Header::AGGREGATE_ROOT_ID], $payload['headers'][Header::AGGREGATE_ROOT_ID_TYPE])) {
             /** @var AggregateRootId $aggregateRootIdClassName */
@@ -60,6 +59,6 @@ final class ConstructingMessageSerializer implements MessageSerializer
         $className = $this->classNameInflector->typeToClassName($payload['headers'][Header::EVENT_TYPE]);
         $event = $this->eventSerializer->unserializePayload($className, $payload['payload']);
 
-        yield new Message($event, $payload['headers']);
+        return new Message($event, $payload['headers']);
     }
 }

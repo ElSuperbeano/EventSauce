@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace EventSauce\EventSourcing;
 
+use EventSauce\EventSourcing\Serialization\SerializableEvent;
+
 final class Message
 {
     /**
-     * @var object
+     * @var SerializableEvent
      */
     private $event;
 
@@ -53,7 +55,7 @@ final class Message
         return $this->headers;
     }
 
-    public function event(): object
+    public function event(): SerializableEvent
     {
         return $this->event;
     }

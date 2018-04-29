@@ -7,7 +7,7 @@ namespace EventSauce\EventSourcing\Serialization;
 use EventSauce\EventSourcing\Header;
 use EventSauce\EventSourcing\Message;
 use EventSauce\EventSourcing\Upcasting\Upcaster;
-use Generator;
+
 
 class UpcastingMessageSerializer implements MessageSerializer
 {
@@ -32,14 +32,12 @@ class UpcastingMessageSerializer implements MessageSerializer
         return $this->eventSerializer->serializeMessage($message);
     }
 
-    public function unserializePayload(array $payload): Generator
+    public function unserializePayload(array $payload): Message
     {
         if ($this->upcaster->canUpcast($payload['headers'][Header::EVENT_TYPE], $payload)) {
-            foreach ($this->upcaster->upcast($payload) as $payload) {
-                yield from $this->eventSerializer->unserializePayload($payload);
-            }
-        } else {
-            yield from $this->eventSerializer->unserializePayload($payload);
+            $payload = $this->upcaster->upcast($payload);
         }
+
+        return $this->eventSerializer->unserializePayload($payload);
     }
 }

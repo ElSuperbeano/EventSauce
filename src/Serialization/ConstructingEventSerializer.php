@@ -11,12 +11,12 @@ class ConstructingEventSerializer implements EventSerializer
      *
      * @return array
      */
-    public function serializeEvent(object $event): array
+    public function serializeEvent(SerializableEvent $event): array
     {
         return $event->toPayload();
     }
 
-    public function unserializePayload(string $className, array $payload): object
+    public function unserializePayload(string $className, array $payload): SerializableEvent
     {
         /* @var SerializableEvent $className */
         return $className::fromPayload($payload);
