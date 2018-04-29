@@ -21,24 +21,23 @@ final class DelegatingUpcaster implements Upcaster
         }
     }
 
-    public function upcaster(array $message): ?Upcaster
+    public function upcaster(array $message): Generator
     {
         $type = $message['headers'][Header::EVENT_TYPE];
 
         foreach ($this->upcasters[$type] ?? [] as $upcaster) {
             if ($upcaster->canUpcast($type, $message)) {
-                return $upcaster;
+                yield $upcaster;
             }
         }
-
-        return null;
     }
 
     public function upcast(array $message): array
     {
-        if ($upcaster = $this->upcaster($message)) {
+        foreach ($this->upcaster($message) as $upcaster) {
             $message = $upcaster->upcast($message);
         }
+
         return $message;
     }
 
